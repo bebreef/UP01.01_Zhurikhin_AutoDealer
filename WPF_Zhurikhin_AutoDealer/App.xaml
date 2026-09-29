@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:WPF_Zhurikhin_AutoDealer"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary Source="Themes/LightTheme.xaml"/>
     </Application.Resources>
 </Application>
