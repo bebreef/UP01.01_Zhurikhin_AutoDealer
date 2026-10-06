@@ -16,7 +16,7 @@
                     <TextBlock Text="Вход в систему" FontSize="15" TextAlignment="Center" Margin="0,4,0,22" Opacity="0.7"/>
 
                     <TextBlock Text="Логин" FontSize="14" Margin="0,0,0,6"/>
-                    <TextBox x:Name="LoginTB" Height="38" Margin="0" FontSize="15" Padding="8,0" VerticalContentAlignment="Center" TextAlignment="Center" ToolTip="Введите свой логин"/>
+                    <TextBox x:Name="LoginTB" Height="38" Margin="0" FontSize="15" Padding="8,0" VerticalContentAlignment="Center" ToolTip="Введите свой логин"/>
 
                     <TextBlock Text="Пароль" FontSize="14" Margin="0,14,0,6"/>
                     <PasswordBox x:Name="PasswordTB" Height="38" Margin="0" FontSize="15" Padding="8,0" VerticalContentAlignment="Center" ToolTip="Введите свой пароль"/>
@@ -31,7 +31,7 @@
                         <Border Background="Gray" CornerRadius="10" Padding="10">
                             <TextBlock x:Name="CaptchaText" FontSize="24" FontWeight="Bold" FontFamily="Consolas" Foreground="#263449" TextAlignment="Center"/>
                         </Border>
-                        <TextBox x:Name="CaptchaTB" Height="36" Margin="0,8,0,0" FontSize="15" VerticalContentAlignment="Center" TextAlignment="Center" ToolTip="Введите символы с учётом регистра"/>
+                        <TextBox x:Name="CaptchaTB" Height="36" Margin="0,8,0,0" FontSize="15" VerticalContentAlignment="Center" ToolTip="Введите символы с учётом регистра"/>
                         <Button x:Name="CaptchaConfirm" Content="Подтвердить" Height="34" Margin="0,8,0,0" FontSize="13" Click="CaptchaConfirm_Click"/>
                     </StackPanel>
 
