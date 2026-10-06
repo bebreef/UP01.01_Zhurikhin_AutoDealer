@@ -10,7 +10,7 @@
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
         <Grid Margin="20">
-            <Border Width="360" Padding="24" CornerRadius="20" BorderThickness="1" Background="Gray" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Border Width="360" Padding="24" CornerRadius="20" BorderThickness="1" BorderBrush="{DynamicResource InputBorderBrush}" Background="{DynamicResource CardBackgroundBrush}" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel>
                     <TextBlock Text="АвтоДилер" FontSize="28" FontWeight="Bold" TextAlignment="Center"/>
                     <TextBlock Text="Вход в систему" FontSize="15" TextAlignment="Center" Margin="0,4,0,22" Opacity="0.7"/>
@@ -28,8 +28,8 @@
 
                     <StackPanel x:Name="CaptchaGrid" Visibility="Collapsed" Margin="0,18,0,0">
                         <TextBlock Text="Подтвердите, что вы человек" FontSize="13" TextAlignment="Center" Margin="0,0,0,8"/>
-                        <Border Background="Gray" CornerRadius="10" Padding="10">
-                            <TextBlock x:Name="CaptchaText" FontSize="24" FontWeight="Bold" FontFamily="Consolas" Foreground="#263449" TextAlignment="Center"/>
+                        <Border Background="{DynamicResource InputBackgroundBrush}" CornerRadius="10" Padding="10">
+                            <TextBlock x:Name="CaptchaText" FontSize="24" FontWeight="Bold" FontFamily="Consolas" TextAlignment="Center"/>
                         </Border>
                         <TextBox x:Name="CaptchaTB" Height="36" Margin="0,8,0,0" FontSize="15" VerticalContentAlignment="Center" ToolTip="Введите символы с учётом регистра"/>
                         <Button x:Name="CaptchaConfirm" Content="Подтвердить" Height="34" Margin="0,8,0,0" FontSize="13" Click="CaptchaConfirm_Click"/>

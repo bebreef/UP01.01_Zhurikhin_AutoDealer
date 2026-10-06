@@ -31,11 +31,15 @@ namespace WPF_Zhurikhin_AutoDealer
         private void ChangeTheme_Click(object sender, RoutedEventArgs e)
         {
             isDarkTheme = !isDarkTheme;
+
             string theme = isDarkTheme ? "DarkTheme.xaml" : "LightTheme.xaml";
-            var uri = new Uri($"Themes/{theme}", UriKind.Relative);
-            ResourceDictionary resourceDict = Application.LoadComponent(uri) as ResourceDictionary;
-            Application.Current.Resources.Clear();
-            Application.Current.Resources.MergedDictionaries.Add(resourceDict);
+
+            var dictionary = new ResourceDictionary
+            {
+                Source = new Uri($"Themes/{theme}", UriKind.Relative)
+            };
+
+            Application.Current.Resources.MergedDictionaries[0] = dictionary;
         }
 
 
