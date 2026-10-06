@@ -36,4 +36,7 @@
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="BorderBrush" Value="#8b0000"/>
     </Style>
+    <Style TargetType="Border">
+        <Setter Property="BorderBrush" Value="#8b0000"/>
+    </Style>
 </ResourceDictionary>

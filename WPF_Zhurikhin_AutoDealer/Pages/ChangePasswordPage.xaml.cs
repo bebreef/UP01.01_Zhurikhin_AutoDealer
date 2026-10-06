@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace WPF_Zhurikhin_AutoDealer.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для LoginPage.xaml
+    /// Логика взаимодействия для ChangePasswordPage.xaml
     /// </summary>
-    public partial class LoginPage : Page
+    public partial class ChangePasswordPage : Page
     {
-        public LoginPage()
+        public ChangePasswordPage()
         {
             InitializeComponent();
         }

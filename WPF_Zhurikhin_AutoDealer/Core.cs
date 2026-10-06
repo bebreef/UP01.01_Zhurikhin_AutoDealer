@@ -9,5 +9,6 @@ namespace WPF_Zhurikhin_AutoDealer
     public class Core
     {
         public static DB_Zhurikhin_AutoDealerManagementEntities Context = new DB_Zhurikhin_AutoDealerManagementEntities();
+        public static Employees CurrentUser { get; set; }
     }
 }
