@@ -18,86 +18,118 @@ namespace WPF_Zhurikhin_AutoDealer.Pages
     /// <summary>
     /// Логика взаимодействия для RegPage.xaml
     /// </summary>
-    public partial class RegPage : Page
+    public partial class LoginPage : Page
     {
-        static int errcount = 0;
-        public RegPage()
+        private int errcount = 0;
+        private readonly Random random = new Random();
+
+        public LoginPage()
         {
             InitializeComponent();
-            if (errcount%3 == 0)
-            {
-                LoginButton.IsEnabled = false;
-                ShowCaptcha();
-                CaptchaChange();
-            }
-        }
-
-        private void ShowCaptcha()
-        {
-            CaptchaGrid.Visibility = Visibility.Visible;
-        }
-        public void CaptchaChange()
-        {
-            String allowchar = " ";
-            allowchar = "A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z"; allowchar += "a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,y,z"; allowchar += "1,2,3,4,5,6,7,8,9,0";
-            char[] a = { ',' };
-            String[] ar = allowchar.Split(a);
-            String pwd = "";
-            string temp = "";
-            Random r = new Random();
-            for (int i = 0; i < 6; i++)
-            {
-                temp = ar[(r.Next(0, ar.Length))];
-                pwd += temp;
-            }
-            CaptchaText.Text = pwd;
-        }
-
-
-        private void ChangePassword_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Pages.ChangePasswordPage());
-        }
-
-        private void RegButton_Click(object sender, RoutedEventArgs e)
-        {
-            NavigationService.Navigate(new Pages.RegPage());
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             string login = LoginTB.Text.Trim();
             string password = PasswordTB.Password;
+
             if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password))
             {
-                MessageBox.Show("Введите логин и пароль.", "Авторизация", MessageBoxButton.OK , MessageBoxImage.Warning);
-                errcount++;
+                MessageBox.Show("Введите логин и пароль.", "Авторизация", MessageBoxButton.OK, MessageBoxImage.Warning);
+                ClearLoginFields();
                 return;
             }
-            var employee = Core.Context.Employees.FirstOrDefault(x=>x.Login == login);
+
+            var employee = Core.Context.Employees.FirstOrDefault(x => x.Login == login);
+
             if (employee == null || !PasswordHelper.VerifyPassword(password, employee.PasswordHash))
             {
-                MessageBox.Show("Неверный логин или пароль.", "Авторизация", MessageBoxButton.OK, MessageBoxImage.Warning);
                 errcount++;
+                ClearLoginFields();
+
+                if (errcount % 3 == 0)
+                {
+                    ShowCaptcha();
+                }
+
+                MessageBox.Show("Неверный логин или пароль.", "Авторизация", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+                if (CaptchaGrid.Visibility == Visibility.Visible)
+                {
+                    CaptchaTB.Focus();
+                }
+                else
+                {
+                    LoginTB.Focus();
+                }
+
                 return;
             }
+
+            errcount = 0;
             Core.CurrentUser = employee;
-            MessageBox.Show($"Добро пожаловать, {employee.FullName}!");
+
+            MessageBox.Show($"Добро пожаловать, {employee.FullName}!", "Авторизация", MessageBoxButton.OK, MessageBoxImage.Information);
             NavigationService.Navigate(new MainPage());
+        }
+
+        private void ClearLoginFields()
+        {
+            LoginTB.Clear();
+            PasswordTB.Clear();
+        }
+
+        private void ShowCaptcha()
+        {
+            CaptchaTB.Clear();
+            CaptchaChange();
+            CaptchaGrid.Visibility = Visibility.Visible;
+            LoginButton.IsEnabled = false;
+            LoginTB.IsEnabled = false;
+            PasswordTB.IsEnabled = false;
+        }
+
+        private void CaptchaChange()
+        {
+            string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            char[] captcha = new char[6];
+
+            for (int i = 0; i < captcha.Length; i++)
+            {
+                captcha[i] = characters[random.Next(characters.Length)];
+            }
+
+            CaptchaText.Text = new string(captcha);
         }
 
         private void CaptchaConfirm_Click(object sender, RoutedEventArgs e)
         {
-            if (CaptchaTB.Text.Trim() == CaptchaText.Text.Trim())
+            if (CaptchaTB.Text.Trim() != CaptchaText.Text)
             {
-                CaptchaGrid.Visibility = Visibility.Collapsed;
-                LoginButton.IsEnabled = true;
-            }
-            else
-            {
-                MessageBox.Show("Неверная капча.", "Авторизация", MessageBoxButton.OK, MessageBoxImage.Warning);
+                CaptchaTB.Clear();
+                CaptchaChange();
+
+                MessageBox.Show("Неверная капча. Попробуйте ещё раз.", "Авторизация", MessageBoxButton.OK, MessageBoxImage.Warning);
+                CaptchaTB.Focus();
                 return;
             }
+
+            CaptchaTB.Clear();
+            CaptchaGrid.Visibility = Visibility.Collapsed;
+            LoginButton.IsEnabled = true;
+            LoginTB.IsEnabled = true;
+            PasswordTB.IsEnabled = true;
+            LoginTB.Focus();
+        }
+
+        private void ChangePassword_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new ChangePasswordPage());
+        }
+
+        private void RegButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new RegPage());
         }
     }
 }

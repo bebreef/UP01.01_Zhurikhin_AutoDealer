@@ -18,9 +18,9 @@ namespace WPF_Zhurikhin_AutoDealer.Pages
     /// <summary>
     /// Логика взаимодействия для LoginPage.xaml
     /// </summary>
-    public partial class LoginPage : Page
+    public partial class RegPage : Page
     {
-        public LoginPage()
+        public RegPage()
         {
             InitializeComponent();
         }
