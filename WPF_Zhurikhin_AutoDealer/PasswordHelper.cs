@@ -13,6 +13,33 @@ namespace WPF_Zhurikhin_AutoDealer
         private const int SaltSize = 16;
         private const int HashSize = 32;
 
+        public static string ValidatePassword(string password, string confirmation)
+        {
+            if (string.IsNullOrWhiteSpace(password))
+                return "Введите пароль.";
+
+            if (password.Length < 6 || password.Length > 128)
+                return "Пароль должен содержать от 6 до 128 символов.";
+
+            bool hasDigit = false;
+
+            foreach (char symbol in password)
+            {
+                if (symbol >= '0' && symbol <= '9')
+                    hasDigit = true;
+                else if (!((symbol >= 'A' && symbol <= 'Z') || (symbol >= 'a' && symbol <= 'z')))
+                    return "Используйте в пароле только латинские буквы и цифры.";
+            }
+
+            if (!hasDigit)
+                return "Добавьте в пароль хотя бы одну цифру.";
+
+            if (password != confirmation)
+                return "Пароли не совпадают.";
+
+            return null;
+        }
+
         public static string HashPassword(string password)
         {
             byte[] salt = new byte[SaltSize];

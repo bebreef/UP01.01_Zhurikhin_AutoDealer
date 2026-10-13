@@ -15,9 +15,6 @@ using System.Windows.Shapes;
 
 namespace WPF_Zhurikhin_AutoDealer.Pages
 {
-    /// <summary>
-    /// Логика взаимодействия для RegPage.xaml
-    /// </summary>
     public partial class LoginPage : Page
     {
         private int errcount = 0;
