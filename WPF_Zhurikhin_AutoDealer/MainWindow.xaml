@@ -6,6 +6,7 @@
         MinHeight="500" 
         MinWidth="620" 
         WindowStartupLocation="CenterScreen" FontFamily="Segoe UI" 
+        Icon="/Images/logo.ico"
         Background="{DynamicResource WindowBackgroundBrush}" Foreground="{DynamicResource TextBrush}">
     <Grid>
         <Grid.RowDefinitions>

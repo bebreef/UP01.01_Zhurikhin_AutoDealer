@@ -269,6 +269,23 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\badge.png" />
+    <Resource Include="Images\car.png" />
+    <Resource Include="Images\column-chart.png" />
+    <Resource Include="Images\download.png" />
+    <Resource Include="Images\exit.png" />
+    <Resource Include="Images\filter.png" />
+    <Resource Include="Images\house.png" />
+    <Resource Include="Images\key.png" />
+    <Resource Include="Images\logo.ico" />
+    <Resource Include="Images\menu.png" />
+    <Resource Include="Images\pencil.png" />
+    <Resource Include="Images\plus.png" />
+    <Resource Include="Images\receipt.png" />
+    <Resource Include="Images\save.png" />
+    <Resource Include="Images\search.png" />
+    <Resource Include="Images\trash.png" />
+    <Resource Include="Images\user.png" />
     <Content Include="Model1.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Model1.Context.cs</LastGenOutput>
