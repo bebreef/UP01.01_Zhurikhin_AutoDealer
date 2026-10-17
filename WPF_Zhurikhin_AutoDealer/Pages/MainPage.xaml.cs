@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace WPF_Zhurikhin_AutoDealer.Pages
 {
@@ -20,6 +10,45 @@ namespace WPF_Zhurikhin_AutoDealer.Pages
         public MainPage()
         {
             InitializeComponent();
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (Core.CurrentUser == null)
+                return;
+
+            WelcomeText.Text = "Добро пожаловать, " + Core.CurrentUser.FullName + "!";
+            LoadSummary();
+        }
+
+        private void RefreshButton_Click(object sender, RoutedEventArgs e)
+        {
+            LoadSummary();
+        }
+
+        private void LoadSummary()
+        {
+            if (Core.CurrentUser == null)
+                return;
+
+            try
+            {
+                RoleText.Text = "Роль: " + (Core.CurrentUser.Roles == null ? "не назначена" : Core.CurrentUser.Roles.RoleName);
+                int cars = Core.Context.Cars.Count();
+                int clients = Core.Context.Clients.Count();
+                int deals = Core.Context.Deals.Count();
+                CarsCountText.Text = cars.ToString();
+                ClientsCountText.Text = clients.ToString();
+                DealsCountText.Text = deals.ToString();
+                StatusText.Text = "Обновлено: " + DateTime.Now.ToString("dd.MM.yyyy HH:mm");
+            }
+            catch (Exception)
+            {
+                CarsCountText.Text = "—";
+                ClientsCountText.Text = "—";
+                DealsCountText.Text = "—";
+                StatusText.Text = "Не удалось загрузить сведения. Проверьте подключение к базе данных и нажмите «Обновить сведения».";
+            }
         }
     }
 }
