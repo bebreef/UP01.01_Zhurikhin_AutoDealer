@@ -1,14 +1,39 @@
-﻿<Page x:Class="WPF_Zhurikhin_AutoDealer.Pages.CarEditPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:WPF_Zhurikhin_AutoDealer.Pages"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="CarEditPage">
-
-    <Grid>
-        
-    </Grid>
+<Page x:Class="WPF_Zhurikhin_AutoDealer.Pages.CarEditPage" 
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+      Title="Автомобиль" 
+      Loaded="Page_Loaded" 
+      Background="{DynamicResource WindowBackgroundBrush}" 
+      Foreground="{DynamicResource TextBrush}">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel x:Name="EditorPanel" Margin="24" MaxWidth="700" HorizontalAlignment="Left">
+            <TextBlock Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Page}}" FontSize="26" FontWeight="Bold" Margin="0,0,0,16"/>
+            <TextBlock Text="VIN — 17 латинских букв и цифр, без I, O и Q"/>
+            <TextBox x:Name="VinBox" MaxLength="17" CharacterCasing="Upper" Margin="0,6,0,12" ToolTip="Уникальный VIN автомобиля; после добавления не изменяется"/>
+            <TextBlock Text="Марка"/>
+            <TextBox x:Name="BrandBox" MaxLength="50" Margin="0,6,0,12" ToolTip="Введите марку, например Toyota"/>
+            <TextBlock Text="Модель"/>
+            <TextBox x:Name="ModelBox" MaxLength="50" Margin="0,6,0,12" ToolTip="Введите модель, например Camry"/>
+            <TextBlock Text="Год выпуска — от 1886 до 2100"/>
+            <TextBox x:Name="YearBox" MaxLength="4" Margin="0,6,0,12" ToolTip="Введите год четырьмя цифрами" PreviewTextInput="Integer_PreviewTextInput"/>
+            <TextBlock Text="Цвет — необязательно"/>
+            <TextBox x:Name="ColorBox" MaxLength="30" Margin="0,6,0,12" ToolTip="Введите цвет автомобиля"/>
+            <TextBlock Text="Пробег, км — от 0 до 2 147 483 647"/>
+            <TextBox x:Name="MileageBox" MaxLength="10" Margin="0,6,0,12" ToolTip="Введите целое неотрицательное число" PreviewTextInput="Integer_PreviewTextInput"/>
+            <TextBlock Text="Цена, ₽ — от 0,01 до 9 999 999 999,99"/>
+            <TextBox x:Name="PriceBox" MaxLength="13" Margin="0,6,0,12" ToolTip="До двух цифр после запятой; также можно использовать точку" PreviewTextInput="Price_PreviewTextInput"/>
+            <TextBlock Text="Статус"/>
+            <ComboBox x:Name="StatusBox" Height="36" Margin="0,6,0,12" VerticalContentAlignment="Center" ToolTip="Продажа и резервирование выполняются через сделки"/>
+            <TextBlock x:Name="StatusHint" Text="Статусы «Продан» и «Зарезервирован» устанавливаются через сделки." TextWrapping="Wrap" Opacity="0.7" Margin="0,0,0,16"/>
+            <WrapPanel>
+                <Button x:Name="SaveButton" Width="160" Height="42" Margin="0,0,8,8" ToolTip="Проверить поля и сохранить автомобиль" Click="SaveButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Rectangle Width="18" Height="18" Fill="{DynamicResource ButtonTextBrush}" Margin="0,0,8,0"><Rectangle.OpacityMask><ImageBrush ImageSource="/Images/save.png"/></Rectangle.OpacityMask></Rectangle>
+                        <TextBlock Text="Сохранить" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Content="Отмена" Width="160" Height="42" Margin="0,0,8,8" ToolTip="Вернуться без сохранения изменений" Click="CancelButton_Click"/>
+            </WrapPanel>
+        </StackPanel>
+    </ScrollViewer>
 </Page>
