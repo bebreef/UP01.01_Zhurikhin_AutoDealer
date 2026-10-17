@@ -20,6 +20,10 @@
 
     <Style TargetType="TextBlock">
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ComboBox}}" Value="Black"><Setter Property="Foreground" Value="Black"/></DataTrigger>
+            <DataTrigger Binding="{Binding Foreground, RelativeSource={RelativeSource AncestorType=ComboBoxItem}}" Value="Black"><Setter Property="Foreground" Value="Black"/></DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <Style TargetType="Button">
@@ -140,14 +144,19 @@
     </Style>
     <Style TargetType="ComboBox">
         <Style.Resources>
-            <Style TargetType="TextBlock"><Setter Property="Foreground" Value="#202938"/></Style>
+            <Style TargetType="TextBlock"><Setter Property="Foreground" Value="Black"/></Style>
         </Style.Resources>
-        <Setter Property="Foreground" Value="#202938"/>
-        <Setter Property="Background" Value="#FFFFFF"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="TextElement.Foreground" Value="Black"/>
+        <Setter Property="Background" Value="White"/>
         <Setter Property="FontSize" Value="14"/>
     </Style>
     <Style TargetType="ComboBoxItem">
-        <Setter Property="Foreground" Value="#202938"/>
-        <Setter Property="Background" Value="#FFFFFF"/>
+        <Style.Resources>
+            <Style TargetType="TextBlock"><Setter Property="Foreground" Value="Black"/></Style>
+        </Style.Resources>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="TextElement.Foreground" Value="Black"/>
+        <Setter Property="Background" Value="White"/>
     </Style>
 </ResourceDictionary>

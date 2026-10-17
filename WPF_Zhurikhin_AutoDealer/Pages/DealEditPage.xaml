@@ -1,14 +1,36 @@
-﻿<Page x:Class="WPF_Zhurikhin_AutoDealer.Pages.DealEditPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:WPF_Zhurikhin_AutoDealer.Pages"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="DealEditPage">
-
-    <Grid>
-        
-    </Grid>
+<Page x:Class="WPF_Zhurikhin_AutoDealer.Pages.DealEditPage" 
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+      Title="Сделка" 
+      Loaded="Page_Loaded" 
+      Background="{DynamicResource WindowBackgroundBrush}" 
+      Foreground="{DynamicResource TextBrush}">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24" Width="650" HorizontalAlignment="Left">
+            <TextBlock x:Name="HeadingText" FontSize="26" FontWeight="Bold" Margin="0,0,0,12"/>
+            <TextBlock x:Name="HintText" Text="Все поля обязательны. Статус автомобиля изменяется автоматически при резервировании, продаже и отмене резерва." TextWrapping="Wrap" Margin="0,0,0,16"/>
+            <StackPanel x:Name="EditorPanel">
+                <TextBlock Text="Автомобиль"/>
+                <ComboBox x:Name="CarBox" SelectedValuePath="VIN" Height="36" Margin="0,6,0,16" ToolTip="Для новой сделки доступны автомобили на складе" SelectionChanged="CarBox_SelectionChanged">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate><TextBlock Foreground="Black"><Run Text="{Binding Brand}"/><Run Text="{Binding Model}"/><Run Text=" — "/><Run Text="{Binding VIN}"/></TextBlock></DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <TextBlock Text="Клиент"/>
+                <ComboBox x:Name="ClientBox" DisplayMemberPath="FullName" SelectedValuePath="ClientID" Height="36" Margin="0,6,0,16" IsTextSearchEnabled="True" ToolTip="Выберите клиента; поиск с клавиатуры по ФИО"/>
+                <TextBlock Text="Ответственный сотрудник"/>
+                <ComboBox x:Name="EmployeeBox" DisplayMemberPath="FullName" SelectedValuePath="EmployeeID" Height="36" Margin="0,6,0,16" IsTextSearchEnabled="True" ToolTip="Выберите ответственного сотрудника"/>
+                <TextBlock Text="Дата договора"/>
+                <DatePicker x:Name="DealDatePicker" Height="36" Margin="0,6,0,16" Language="ru-RU" Foreground="Black" Background="White" ToolTip="Дата договора от 01.01.1753"/>
+                <TextBlock Text="Итоговая сумма, ₽"/>
+                <TextBox x:Name="PriceBox" MaxLength="13" Margin="0,6,0,16" ToolTip="От 0,01 до 9 999 999 999,99; до двух знаков после запятой" PreviewTextInput="Price_PreviewTextInput"/>
+                <TextBlock Text="Статус договора"/>
+                <ComboBox x:Name="StatusBox" Height="36" Margin="0,6,0,20" ToolTip="Исполненные и отменённые договоры изменить нельзя"/>
+            </StackPanel>
+            <WrapPanel>
+                <Button x:Name="SaveButton" Content="Сохранить" Width="160" Height="42" Margin="0,0,12,8" ToolTip="Проверить данные и сохранить сделку" Click="SaveButton_Click"/>
+                <Button Content="Назад" Width="140" Height="42" Margin="0,0,0,8" ToolTip="Вернуться без сохранения" Click="CancelButton_Click"/>
+            </WrapPanel>
+        </StackPanel>
+    </ScrollViewer>
 </Page>

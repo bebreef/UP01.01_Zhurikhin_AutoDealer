@@ -1,7 +1,7 @@
 <Window x:Class="WPF_Zhurikhin_AutoDealer.MainWindow" 
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-        Title="{Binding Content.Title, ElementName=MainFrame, StringFormat='АвтоДилер — {0}', FallbackValue=АвтоДилер}" 
+        Title="{Binding Content.Title, ElementName=MainFrame, StringFormat='АвтоДилер - {0}', FallbackValue=АвтоДилер}" 
         Height="760" 
         Width="1100" 
         MinHeight="550" 

@@ -1,14 +1,91 @@
-﻿<Page x:Class="WPF_Zhurikhin_AutoDealer.Pages.DealsPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:WPF_Zhurikhin_AutoDealer.Pages"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="DealsPage">
-
-    <Grid>
-        
+<Page x:Class="WPF_Zhurikhin_AutoDealer.Pages.DealsPage" 
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+      Title="Сделки" 
+      Loaded="Page_Loaded"
+      Background="{DynamicResource WindowBackgroundBrush}" 
+      Foreground="{DynamicResource TextBrush}">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="Сделки" FontSize="26" FontWeight="Bold" Margin="0,0,0,16"/>
+        <WrapPanel Grid.Row="1" Margin="0,0,0,12">
+            <StackPanel Width="310" Margin="0,0,12,8">
+                <TextBlock Text="Поиск по №, VIN, авто, клиенту, сотруднику"/>
+                <Grid>
+                    <TextBox x:Name="SearchBox" Margin="0,6,0,0" MaxLength="100" ToolTip="Введите номер, VIN, автомобиль, ФИО клиента или сотрудника" TextChanged="SearchBox_TextChanged"/>
+                    <TextBlock Text="Начните вводить…" Margin="9,6,0,0" VerticalAlignment="Center" IsHitTestVisible="False" Opacity="0.55">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+            </StackPanel>
+            <StackPanel Width="190" Margin="0,0,12,8">
+                <TextBlock Text="Статус договора"/>
+                <ComboBox x:Name="StatusBox" SelectedIndex="0" Margin="0,6,0,0" Height="36" VerticalContentAlignment="Center" ToolTip="Выберите статус договора" SelectionChanged="Filter_SelectionChanged">
+                    <ComboBoxItem Content="Все статусы"/>
+                    <ComboBoxItem Content="Черновик"/><ComboBoxItem Content="Зарезервирован"/>
+                    <ComboBoxItem Content="Исполнен"/><ComboBoxItem Content="Отменен"/>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Width="190" Margin="0,0,12,8">
+                <TextBlock Text="Сортировка"/>
+                <ComboBox x:Name="SortBox" SelectedIndex="0" Margin="0,6,0,0" Height="36" VerticalContentAlignment="Center" ToolTip="Порядок сделок" SelectionChanged="Filter_SelectionChanged">
+                    <ComboBoxItem Content="Сначала новые"/>
+                    <ComboBoxItem Content="Сначала старые"/>
+                    <ComboBoxItem Content="Сначала дешевле"/><ComboBoxItem Content="Сначала дороже"/>
+                </ComboBox>
+            </StackPanel>
+            <Button Content="Сбросить" Width="120" Height="36" Margin="0,22,12,8" ToolTip="Очистить поиск и фильтры" Click="ResetButton_Click"/>
+        </WrapPanel>
+        <DataGrid x:Name="DealsGrid" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False" SelectionMode="Single" SelectionUnit="FullRow" HeadersVisibility="Column" RowHeaderWidth="0" MinHeight="120" ToolTip="Выберите сделку для редактирования или удаления">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="№" Binding="{Binding DealID}" Width="55"/>
+                <DataGridTextColumn Header="Дата" Binding="{Binding DealDate, StringFormat=dd.MM.yyyy}" Width="100"/>
+                <DataGridTextColumn Header="VIN" Binding="{Binding VIN}" Width="165"/>
+                <DataGridTextColumn Header="Марка" Binding="{Binding Cars.Brand}" Width="100"/>
+                <DataGridTextColumn Header="Модель" Binding="{Binding Cars.Model}" Width="110"/>
+                <DataGridTextColumn Header="Клиент" Binding="{Binding Clients.FullName}" Width="220"/>
+                <DataGridTextColumn Header="Сотрудник" Binding="{Binding Employees.FullName}" Width="200"/>
+                <DataGridTextColumn Header="Сумма, ₽" Binding="{Binding FinalPrice, StringFormat=N2}" Width="140"/>
+                <DataGridTextColumn Header="Статус" Binding="{Binding ContractStatus}" Width="150"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Grid.Row="3" Margin="0,12,0,0">
+            <TextBlock x:Name="CountText" TextWrapping="Wrap" Margin="0,0,0,8"/>
+            <WrapPanel>
+                <Button x:Name="AddButton" Width="145" Height="42" Margin="0,0,8,8" ToolTip="Добавить сделку" Click="AddButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Rectangle Width="18" Height="18" Fill="{DynamicResource ButtonTextBrush}" Margin="0,0,8,0"><Rectangle.OpacityMask><ImageBrush ImageSource="/Images/plus.png"/></Rectangle.OpacityMask></Rectangle>
+                        <TextBlock Text="Добавить" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="EditButton" Width="165" Height="42" Margin="0,0,8,8" ToolTip="Открыть выбранную сделку" Click="EditButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Rectangle Width="18" Height="18" Fill="{DynamicResource ButtonTextBrush}" Margin="0,0,8,0"><Rectangle.OpacityMask><ImageBrush ImageSource="/Images/pencil.png"/></Rectangle.OpacityMask></Rectangle>
+                        <TextBlock Text="Открыть" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="DeleteButton" Width="145" Height="42" Margin="0,0,8,8" ToolTip="Удалить выбранный черновик" Click="DeleteButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Rectangle Width="18" Height="18" Fill="{DynamicResource ButtonTextBrush}" Margin="0,0,8,0"><Rectangle.OpacityMask><ImageBrush ImageSource="/Images/trash.png"/></Rectangle.OpacityMask></Rectangle>
+                        <TextBlock Text="Удалить" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Content="Обновить" Width="145" Height="42" Margin="0,0,8,8" ToolTip="Загрузить актуальные данные из базы" Click="RefreshButton_Click"/>
+            </WrapPanel>
+        </StackPanel>
     </Grid>
 </Page>

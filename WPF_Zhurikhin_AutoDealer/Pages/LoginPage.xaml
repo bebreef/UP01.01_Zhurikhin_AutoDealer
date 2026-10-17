@@ -1,4 +1,5 @@
-﻿<Page x:Class="WPF_Zhurikhin_AutoDealer.Pages.LoginPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+﻿<Page x:Class="WPF_Zhurikhin_AutoDealer.Pages.LoginPage" 
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
       Title="Авторизация" 
       FontFamily="Segoe UI">
