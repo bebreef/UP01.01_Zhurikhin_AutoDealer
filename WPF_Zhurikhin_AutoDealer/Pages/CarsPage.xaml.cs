@@ -156,44 +156,53 @@ namespace WPF_Zhurikhin_AutoDealer.Pages
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!Core.CanEditData())
-                return;
+            if (!Core.CanEditData()) return;
             var selected = CarsGrid.SelectedItem as Cars;
             if (selected == null)
             {
-                MessageBox.Show("Выберите автомобиль.", "Удаление", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Выберите запись.", "Удаление", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
-            if (MessageBox.Show("Удалить " + selected.Brand + " " + selected.Model + " (" + selected.VIN + ")?", "Удаление автомобиля", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
-                return;
-
-            Cars car = null;
             try
             {
-                if (Core.Context.Deals.Any(x => x.VIN == selected.VIN) || Core.Context.ServiceOrders.Any(x => x.VIN == selected.VIN))
+                using (var db = new DB_Zhurikhin_AutoDealerManagementEntities())
                 {
-                    MessageBox.Show("У автомобиля есть сделки или сервисные заказы. Удаление запрещено, чтобы сохранить связанные документы.", "Удаление", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
+                    int draftCount = db.Deals.Count(x => x.VIN == selected.VIN && x.ContractStatus == "Черновик");
+                    if (MessageBox.Show("Удалить автомобиль вместе со связанными черновиками сделок (" + draftCount + ")?", "Каскадное удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+                    using (var transaction = db.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
+                    {
+                        if (db.Deals.Any(x => x.VIN == selected.VIN && x.ContractStatus != "Черновик") || db.ServiceOrders.Any(x => x.VIN == selected.VIN))
+                        {
+                            MessageBox.Show("Есть договоры, отличные от черновиков, или сервисные заказы. Удаление запрещено для сохранения истории.", "Удаление", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            return;
+                        }
+                        var drafts = db.Deals.Where(x => x.VIN == selected.VIN).ToList();
+                        if (drafts.Count != draftCount)
+                        {
+                            MessageBox.Show("Состав черновиков изменился. Обновите список и повторите удаление.", "Удаление");
+                            return;
+                        }
+                        var record = db.Cars.SingleOrDefault(x => x.VIN == selected.VIN);
+                        if (record == null)
+                        {
+                            MessageBox.Show("Запись уже удалена. Обновите список.", "Удаление");
+                            return;
+                        }
+                        db.Deals.RemoveRange(drafts);
+                        db.SaveChanges();
+                        db.Cars.Remove(record);
+                        db.SaveChanges();
+                        transaction.Commit();
+                    }
                 }
-                car = Core.Context.Cars.SingleOrDefault(x => x.VIN == selected.VIN);
-                if (car == null)
-                {
-                    MessageBox.Show("Автомобиль уже удалён. Список будет обновлён.", "Удаление", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                else
-                {
-                    Core.Context.Cars.Remove(car);
-                    Core.Context.SaveChanges();
-                    MessageBox.Show("Автомобиль удалён.", "Удаление", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
+                MessageBox.Show("Запись и связанные черновики удалены.", "Удаление", MessageBoxButton.OK, MessageBoxImage.Information);
                 LoadCars();
             }
             catch (Exception)
             {
-                if (car != null)
-                    Core.Context.Entry(car).State = EntityState.Detached;
-                MessageBox.Show("Не удалось удалить автомобиль. Проверьте подключение и связанные документы, затем обновите список.", "Удаление", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Удаление не выполнено. Проверьте подключение и связанные документы. При ошибке изменения отменяются.", "Удаление", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
+
     }
 }

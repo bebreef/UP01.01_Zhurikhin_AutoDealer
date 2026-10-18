@@ -109,41 +109,53 @@ namespace WPF_Zhurikhin_AutoDealer.Pages
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!Core.CanEditData())
-                return;
+            if (!Core.CanEditData()) return;
             var selected = ClientsGrid.SelectedItem as Clients;
             if (selected == null)
             {
-                MessageBox.Show("Выберите клиента.", "Удаление", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Выберите запись.", "Удаление", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
-            if (MessageBox.Show("Удалить клиента «" + selected.FullName + "»?", "Удаление клиента", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
-                return;
-            Clients client = null;
             try
             {
-                if (Core.Context.Deals.Any(x => x.ClientID == selected.ClientID) || Core.Context.ServiceOrders.Any(x => x.ClientID == selected.ClientID))
+                using (var db = new DB_Zhurikhin_AutoDealerManagementEntities())
                 {
-                    MessageBox.Show("У клиента есть сделки или сервисные заказы. Удаление запрещено, чтобы сохранить связанные документы.", "Удаление", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return;
+                    int draftCount = db.Deals.Count(x => x.ClientID == selected.ClientID && x.ContractStatus == "Черновик");
+                    if (MessageBox.Show("Удалить клиента вместе со связанными черновиками сделок (" + draftCount + ")?", "Каскадное удаление", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes) return;
+                    using (var transaction = db.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
+                    {
+                        if (db.Deals.Any(x => x.ClientID == selected.ClientID && x.ContractStatus != "Черновик") || db.ServiceOrders.Any(x => x.ClientID == selected.ClientID))
+                        {
+                            MessageBox.Show("Есть договоры, отличные от черновиков, или сервисные заказы. Удаление запрещено для сохранения истории.", "Удаление", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            return;
+                        }
+                        var drafts = db.Deals.Where(x => x.ClientID == selected.ClientID).ToList();
+                        if (drafts.Count != draftCount)
+                        {
+                            MessageBox.Show("Состав черновиков изменился. Обновите список и повторите удаление.", "Удаление");
+                            return;
+                        }
+                        var record = db.Clients.SingleOrDefault(x => x.ClientID == selected.ClientID);
+                        if (record == null)
+                        {
+                            MessageBox.Show("Запись уже удалена. Обновите список.", "Удаление");
+                            return;
+                        }
+                        db.Deals.RemoveRange(drafts);
+                        db.SaveChanges();
+                        db.Clients.Remove(record);
+                        db.SaveChanges();
+                        transaction.Commit();
+                    }
                 }
-                client = Core.Context.Clients.SingleOrDefault(x => x.ClientID == selected.ClientID);
-                if (client != null)
-                {
-                    Core.Context.Clients.Remove(client);
-                    Core.Context.SaveChanges();
-                    MessageBox.Show("Клиент удалён.", "Удаление", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                else
-                    MessageBox.Show("Клиент уже удалён. Список будет обновлён.", "Удаление", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Запись и связанные черновики удалены.", "Удаление", MessageBoxButton.OK, MessageBoxImage.Information);
                 LoadClients();
             }
             catch (Exception)
             {
-                if (client != null)
-                    Core.Context.Entry(client).State = EntityState.Detached;
-                MessageBox.Show("Не удалось удалить клиента. Проверьте подключение и связанные документы.", "Удаление", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Удаление не выполнено. Проверьте подключение и связанные документы. При ошибке изменения отменяются.", "Удаление", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
+
     }
 }
