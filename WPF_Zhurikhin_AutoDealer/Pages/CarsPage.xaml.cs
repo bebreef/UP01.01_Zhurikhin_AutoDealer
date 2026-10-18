@@ -19,6 +19,9 @@ namespace WPF_Zhurikhin_AutoDealer.Pages
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            HeadingText.Text = Core.IsCustomer() ? "Каталог автомобилей" : "Автомобили";
+            BuyButton.Visibility = Core.IsCustomer() ? Visibility.Visible : Visibility.Collapsed;
+            CarsGrid.ToolTip = Core.IsCustomer() ? "Выберите автомобиль на складе и нажмите «Купить»" : "Выберите автомобиль для редактирования или удаления";
             bool canEdit = Core.CanEditData();
             AddButton.Visibility = canEdit ? Visibility.Visible : Visibility.Collapsed;
             EditButton.Visibility = AddButton.Visibility;
@@ -113,6 +116,23 @@ namespace WPF_Zhurikhin_AutoDealer.Pages
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
             LoadCars();
+        }
+
+        private void BuyButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Core.IsCustomer()) return;
+            var car = CarsGrid.SelectedItem as Cars;
+            if (car == null)
+            {
+                MessageBox.Show("Выберите автомобиль.", "Покупка", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            if (car.Status != "На складе")
+            {
+                MessageBox.Show("Для покупки доступны автомобили со статусом «На складе».", "Покупка", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            NavigationService.Navigate(new BuyCarPage(car.VIN));
         }
 
         private void AddButton_Click(object sender, RoutedEventArgs e)

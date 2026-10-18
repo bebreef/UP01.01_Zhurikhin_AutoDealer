@@ -160,6 +160,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Core.cs" />
+    <Compile Include="Pages\BuyCarPage.xaml.cs"><DependentUpon>BuyCarPage.xaml</DependentUpon></Compile>
+    <Page Include="Pages\BuyCarPage.xaml"><Generator>MSBuild:Compile</Generator><SubType>Designer</SubType></Page>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

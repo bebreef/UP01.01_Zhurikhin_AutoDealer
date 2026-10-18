@@ -14,7 +14,7 @@ namespace WPF_Zhurikhin_AutoDealer.Pages
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            if (Core.CurrentUser == null)
+            if (Core.CurrentUser == null || Core.IsCustomer())
                 return;
 
             WelcomeText.Text = "Добро пожаловать, " + Core.CurrentUser.FullName + "!";
@@ -28,7 +28,7 @@ namespace WPF_Zhurikhin_AutoDealer.Pages
 
         private void LoadSummary()
         {
-            if (Core.CurrentUser == null)
+            if (Core.CurrentUser == null || Core.IsCustomer())
                 return;
 
             try

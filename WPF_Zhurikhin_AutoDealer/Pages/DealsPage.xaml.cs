@@ -18,6 +18,7 @@ namespace WPF_Zhurikhin_AutoDealer.Pages
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
+            if (Core.IsCustomer()) { IsEnabled = false; return; }
             AddButton.Visibility = Core.CanEditData() ? Visibility.Visible : Visibility.Collapsed;
             DeleteButton.Visibility = AddButton.Visibility;
             LoadDeals();
@@ -25,7 +26,7 @@ namespace WPF_Zhurikhin_AutoDealer.Pages
 
         private void LoadDeals()
         {
-            if (Core.CurrentUser == null)
+            if (Core.CurrentUser == null || Core.IsCustomer())
                 return;
             try
             {

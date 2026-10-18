@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,11 +10,17 @@ namespace WPF_Zhurikhin_AutoDealer.Pages
         public ChangePasswordPage()
         {
             InitializeComponent();
+            if (Core.CurrentUser != null)
+            {
+                LoginTB.Text = Core.CurrentUser.Login;
+                LoginTB.IsReadOnly = true;
+                BackButton.Content = "Назад";
+            }
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            string login = LoginTB.Text.Trim();
+            string login = Core.CurrentUser == null ? LoginTB.Text.Trim() : Core.CurrentUser.Login;
 
             if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(OldPasswordTB.Password))
             {
@@ -33,42 +39,38 @@ namespace WPF_Zhurikhin_AutoDealer.Pages
                 return;
             }
 
-            Employees employee = null;
-            string oldHash = null;
+            if (MessageBox.Show("Сохранить новый пароль?", "Смена пароля", MessageBoxButton.YesNo, MessageBoxImage.Question) != MessageBoxResult.Yes)
+                return;
             SaveButton.IsEnabled = false;
 
             try
             {
-                employee = Core.Context.Employees.FirstOrDefault(x => x.Login == login);
-
-                if (employee == null || !PasswordHelper.VerifyPassword(OldPasswordTB.Password, employee.PasswordHash))
+                using (var db = new DB_Zhurikhin_AutoDealerManagementEntities())
+                using (var transaction = db.Database.BeginTransaction(System.Data.IsolationLevel.Serializable))
                 {
-                    ShowMessage("Неверный логин или текущий пароль.");
-                    ClearPasswords();
-                    OldPasswordTB.Focus();
-                    return;
-                }
+                    var employee = db.Employees.FirstOrDefault(x => x.Login == login && x.IsActive);
+                    if (employee == null || !PasswordHelper.VerifyPassword(OldPasswordTB.Password, employee.PasswordHash))
+                    {
+                        ShowMessage("Неверный логин или текущий пароль.");
+                        ClearPasswords();
+                        OldPasswordTB.Focus();
+                        return;
+                    }
+                    if (OldPasswordTB.Password == PasswordTB.Password)
+                    {
+                        ShowMessage("Новый пароль должен отличаться от текущего.");
+                        PasswordTB.Clear();
+                        ConfirmPasswordTB.Clear();
+                        return;
+                    }
 
-                if (OldPasswordTB.Password == PasswordTB.Password)
-                {
-                    ShowMessage("Новый пароль должен отличаться от текущего.");
-                    PasswordTB.Clear();
-                    ConfirmPasswordTB.Clear();
-                    return;
+                    employee.PasswordHash = PasswordHelper.HashPassword(PasswordTB.Password);
+                    db.SaveChanges();
+                    transaction.Commit();
                 }
-
-                oldHash = employee.PasswordHash;
-                employee.PasswordHash = PasswordHelper.HashPassword(PasswordTB.Password);
-                Core.Context.SaveChanges();
             }
             catch (Exception)
             {
-                if (employee != null && oldHash != null)
-                {
-                    employee.PasswordHash = oldHash;
-                    Core.Context.Entry(employee).Property(x => x.PasswordHash).IsModified = false;
-                }
-
                 ShowMessage("Не удалось изменить пароль. Проверьте подключение к базе данных и попробуйте снова.");
                 return;
             }
@@ -105,7 +107,7 @@ namespace WPF_Zhurikhin_AutoDealer.Pages
             if (NavigationService.CanGoBack)
                 NavigationService.GoBack();
             else
-                NavigationService.Navigate(new LoginPage());
+                NavigationService.Navigate(Core.CurrentUser == null ? (Page)new LoginPage() : Core.IsCustomer() ? (Page)new CarsPage() : new MainPage());
         }
     }
 }

@@ -1,0 +1,17 @@
+<Page x:Class="WPF_Zhurikhin_AutoDealer.Pages.BuyCarPage" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Заявка на покупку" Loaded="Page_Loaded" Language="ru-RU">
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel x:Name="FormPanel" MaxWidth="650" HorizontalAlignment="Left" Margin="24">
+            <TextBlock Text="Заявка на покупку" FontSize="26" FontWeight="Bold" Margin="0,0,0,16"/>
+            <TextBlock x:Name="CarText" FontSize="20" TextWrapping="Wrap"/>
+            <TextBlock x:Name="PriceText" FontSize="20" FontWeight="SemiBold" Margin="0,8,0,16"/>
+            <TextBlock Text="После подтверждения автомобиль будет зарезервирован. Менеджер свяжется с вами для оформления покупки. Оплата в приложении не производится." TextWrapping="Wrap" Margin="0,0,0,20"/>
+            <TextBlock Text="ФИО *"/><TextBox x:Name="NameBox" MaxLength="150" ToolTip="Укажите ФИО покупателя"/>
+            <TextBlock Text="Телефон *"/><TextBox x:Name="PhoneBox" MaxLength="20" ToolTip="От 10 до 15 цифр, например +7(900)123-45-67"/>
+            <TextBlock Text="Email"/><TextBox x:Name="EmailBox" MaxLength="100" ToolTip="Необязательно, например name@example.com"/>
+            <WrapPanel Margin="0,16,0,0">
+                <Button x:Name="BuyButton" Content="Подтвердить заявку" Width="200" Height="42" Click="BuyButton_Click"/>
+                <Button Content="Отмена" Width="140" Height="42" Click="CancelButton_Click"/>
+            </WrapPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

@@ -12,7 +12,7 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="Автомобили" FontSize="26" FontWeight="Bold" Margin="0,0,0,16"/>
+        <TextBlock x:Name="HeadingText" Text="Автомобили" FontSize="26" FontWeight="Bold" Margin="0,0,0,16"/>
         <WrapPanel Grid.Row="1" Margin="0,0,0,12">
             <StackPanel Width="240" Margin="0,0,12,8">
                 <TextBlock Text="Поиск по VIN, марке или модели"/>
@@ -86,6 +86,7 @@
                         <TextBlock Text="Удалить" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
+                <Button x:Name="BuyButton" Content="Купить" Width="145" Height="42" Margin="0,0,8,8" Visibility="Collapsed" ToolTip="Оформить заявку и зарезервировать выбранный автомобиль" Click="BuyButton_Click"/>
                 <Button Content="Обновить" Width="145" Height="42" Margin="0,0,8,8" ToolTip="Загрузить актуальные данные из базы" Click="RefreshButton_Click"/>
             </WrapPanel>
         </StackPanel>

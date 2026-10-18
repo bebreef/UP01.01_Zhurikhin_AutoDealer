@@ -34,8 +34,8 @@
                 <WrapPanel><Button Content="Добавить" Width="120" Click="NewButton_Click"/><Button Content="Редактировать" Width="165" Click="EditButton_Click"/><Button Content="Обновить" Width="120" Click="RefreshButton_Click"/><Button Content="Удалить" Width="110" Click="DeleteButton_Click"/></WrapPanel>
             </StackPanel>
         </Grid>
-        <ScrollViewer x:Name="EditorPanel" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Left" Width="650">
-            <StackPanel>
+        <ScrollViewer x:Name="EditorPanel" Visibility="Collapsed" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel MaxWidth="650" HorizontalAlignment="Left" Margin="0,0,16,0">
                 <TextBlock x:Name="EditorTitle" Text="Новый сотрудник" FontSize="22" FontWeight="Bold" Margin="0,0,0,12"/>
                 <TextBlock Text="ФИО *"/><TextBox x:Name="FullNameBox" MaxLength="150" ToolTip="ФИО сотрудника"/>
                 <TextBlock Text="Должность *"/><TextBox x:Name="PositionBox" MaxLength="50" ToolTip="Должность до 50 символов"/>

@@ -77,7 +77,7 @@ namespace WPF_Zhurikhin_AutoDealer.Pages
             Core.CurrentUser = employee;
 
             MessageBox.Show($"Добро пожаловать, {employee.FullName}!", "Авторизация", MessageBoxButton.OK, MessageBoxImage.Information);
-            NavigationService.Navigate(new MainPage());
+            NavigationService.Navigate(Core.IsCustomer() ? (Page)new CarsPage() : new MainPage());
         }
 
         private void ClearLoginFields()

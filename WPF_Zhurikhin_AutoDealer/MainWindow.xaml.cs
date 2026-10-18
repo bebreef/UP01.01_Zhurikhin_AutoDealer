@@ -122,6 +122,9 @@ namespace WPF_Zhurikhin_AutoDealer
                 return;
             }
 
+            if (Core.IsCustomer() && section != "cars" && section != "password")
+                return;
+
             Page page;
 
             switch (section)
@@ -161,6 +164,12 @@ namespace WPF_Zhurikhin_AutoDealer
 
         private void MainFrame_Navigating(object sender, NavigatingCancelEventArgs e)
         {
+            if (Core.IsCustomer() && (e.Content is MainPage || e.Content is ClientsPage || e.Content is DealsPage || e.Content is CarEditPage || e.Content is ClientEditPage || e.Content is DealEditPage))
+            {
+                e.Cancel = true;
+                return;
+            }
+            if (e.Content is BuyCarPage && !Core.IsCustomer()) { e.Cancel = true; return; }
             bool isPublic = e.Content is LoginPage || e.Content is RegPage || e.Content is ChangePasswordPage;
 
             if (Core.CurrentUser == null && !isPublic)
@@ -191,11 +200,14 @@ namespace WPF_Zhurikhin_AutoDealer
             Sidebar.IsHitTestVisible = menuExpanded;
             Sidebar.IsEnabled = menuExpanded;
             MainFrame.Margin = signedIn ? new Thickness(14, 0, 0, 0) : new Thickness(0);
+            HomeMenu.Visibility = Core.IsCustomer() ? Visibility.Collapsed : Visibility.Visible;
+            ClientsMenu.Visibility = HomeMenu.Visibility;
+            DealsMenu.Visibility = HomeMenu.Visibility;
             EmployeesMenu.Visibility = IsAdministrator() ? Visibility.Visible : Visibility.Collapsed;
             ReportsMenu.Visibility = CanViewReports() ? Visibility.Visible : Visibility.Collapsed;
             BackButton.Visibility = MainFrame.CanGoBack ? Visibility.Visible : Visibility.Collapsed;
             var page = e.Content as Page;
-            if (page is CarsPage) page.Title = "Автомобили";
+            if (page is CarsPage) page.Title = Core.IsCustomer() ? "Каталог автомобилей" : "Автомобили";
             else if (page is ClientsPage) page.Title = "Клиенты";
             else if (page is DealsPage) page.Title = "Сделки";
             else if (page is EmployeesPage) page.Title = "Сотрудники";
