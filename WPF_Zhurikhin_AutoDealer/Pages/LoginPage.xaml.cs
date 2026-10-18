@@ -1,6 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -37,7 +38,16 @@ namespace WPF_Zhurikhin_AutoDealer.Pages
                 return;
             }
 
-            var employee = Core.Context.Employees.FirstOrDefault(x => x.Login == login);
+            Employees employee;
+            try
+            {
+                employee = Core.Context.Employees.Include(x => x.Roles).AsNoTracking().FirstOrDefault(x => x.Login == login && x.IsActive);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Не удалось подключиться к базе данных. Повторите попытку.", "Авторизация", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
             if (employee == null || !PasswordHelper.VerifyPassword(password, employee.PasswordHash))
             {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -19,7 +19,7 @@ namespace WPF_Zhurikhin_AutoDealer.Pages
         {
             try
             {
-                var roles = Core.Context.Roles.OrderBy(x => x.RoleName).ToList();
+                var roles = Core.Context.Roles.Where(x => x.RoleName == "Пользователь").ToList();
                 RoleCB.ItemsSource = roles;
                 RoleCB.SelectedItem = roles.FirstOrDefault(x => x.RoleName == "Пользователь")
                     ?? roles.FirstOrDefault(x => x.RoleName != "Администратор");
@@ -94,7 +94,8 @@ namespace WPF_Zhurikhin_AutoDealer.Pages
                     Phone = phone.Length == 0 ? null : phone,
                     Login = login,
                     PasswordHash = PasswordHelper.HashPassword(PasswordTB.Password),
-                    RoleID = role.RoleID
+                    RoleID = role.RoleID,
+                    IsActive = true
                 };
 
                 Core.Context.Employees.Add(employee);

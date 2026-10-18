@@ -71,6 +71,7 @@
           <Property Name="Phone" Type="nvarchar" MaxLength="20" />
           <Property Name="Login" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="PasswordHash" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="OrderParts">
           <Key>
@@ -543,6 +544,7 @@
           <Property Name="Phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="Login" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="PasswordHash" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Deals" Relationship="Self.FK__Deals__EmployeeI__5812160E" FromRole="Employees" ToRole="Deals" />
           <NavigationProperty Name="Deliveries" Relationship="Self.FK__Deliverie__Emplo__6383C8BA" FromRole="Employees" ToRole="Deliveries" />
           <NavigationProperty Name="Roles" Relationship="Self.FK__Employees__RoleI__4D94879B" FromRole="Employees" ToRole="Roles" />
@@ -1038,6 +1040,7 @@
                 <ScalarProperty Name="Phone" ColumnName="Phone" />
                 <ScalarProperty Name="Login" ColumnName="Login" />
                 <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
